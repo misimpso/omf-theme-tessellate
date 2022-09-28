@@ -13,7 +13,12 @@ function __tilde_path -S -a pth
 end
 
 function _git_branch_name
-    echo (command git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+    set max_len 20
+    set branch (command git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+    if test (string length "$branch") -gt $max_len;
+        set branch (string join "" (string sub -l (math $max_len-3) "$branch") "...")
+    end
+    echo $branch
 end
 
 function _is_git_dirty
